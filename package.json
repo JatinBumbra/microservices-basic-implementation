@@ -14,6 +14,7 @@
     "start:posts:service": "cd services/posts && npm start",
     "start:comments:service": "cd services/comments && npm start",
     "start:query:service": "cd services/query && npm start",
+    "start:moderation:service": "cd services/moderation && npm start",
     "start:event-bus": "cd event-bus && npm start"
   }
 }

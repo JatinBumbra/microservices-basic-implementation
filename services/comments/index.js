@@ -22,7 +22,7 @@ app.post('/posts/:id/comments', async (req, res) => {
   const postId = req.params.id;
 
   const comments = commentsByPostId[postId] || [];
-  comments.push({ id: commentId, content });
+  comments.push({ id: commentId, content, status: 'pending' });
 
   commentsByPostId[postId] = comments;
 
@@ -32,6 +32,7 @@ app.post('/posts/:id/comments', async (req, res) => {
       id: commentId,
       postId,
       content,
+      status: 'pending',
     },
   });
 
@@ -40,8 +41,26 @@ app.post('/posts/:id/comments', async (req, res) => {
 
 app.post('/events', async (req, res) => {
   const { type, data } = req.body;
+
+  if (type === 'CommentModerated') {
+    const { postId, id, status, content } = data;
+    const comment = commentsByPostId[postId].find((com) => com.id === id);
+    comment.status = status;
+
+    await axios.post('http://localhost:4005/events', {
+      type: 'CommentUpdated',
+      data: {
+        id,
+        postId,
+        status,
+        content,
+      },
+    });
+  }
+
+  res.json({});
 });
 
 app.listen(4001, () => {
-  console.log('Running on port 4001');
+  console.log('Service:Comments running on port 4001');
 });
