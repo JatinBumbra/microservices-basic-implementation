@@ -1,7 +1,8 @@
 {
   "workspaces": [
     "./client",
-    "./services/*"
+    "./services/*",
+    "./event-bus"
   ],
   "name": "basic-concepts",
   "version": "1.0.0",
@@ -14,6 +15,7 @@
     "client:start": "cd client && npm start",
     "client:build": "cd client && npm run build",
     "service:posts:start": "cd services/posts && npm start",
-    "service:comments:start": "cd services/comments && npm start"
+    "service:comments:start": "cd services/comments && npm start",
+    "event-bus:start": "cd event-bus && npm start"
   }
 }
