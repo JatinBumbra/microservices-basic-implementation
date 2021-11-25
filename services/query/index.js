@@ -1,4 +1,5 @@
 const express = require('express');
+const axios = require('axios');
 
 const app = express();
 
@@ -10,9 +11,7 @@ app.get('/posts', (req, res) => {
   res.json(posts);
 });
 
-app.post('/events', (req, res) => {
-  const { type, data } = req.body;
-
+const handleEvent = ({ type, data }) => {
   if (type === 'PostCreated') {
     const { id, title } = data;
     posts[id] = {
@@ -40,10 +39,31 @@ app.post('/events', (req, res) => {
     comment.status = status;
     comment.content = content;
   }
+};
 
-  res.json({});
+app.post('/events', (req, res) => {
+  try {
+    const { type, data } = req.body;
+
+    handleEvent({ type, data });
+
+    res.json({});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error);
+  }
 });
 
-app.listen(4002, () => {
+app.listen(4002, async () => {
   console.log('Service:Query running on port 4002');
+
+  try {
+    const res = await axios.get('http://localhost:4005/events');
+    for (let event of res.data) {
+      const { type, data } = event;
+      handleEvent({ type, data });
+    }
+  } catch (error) {
+    console.error(error);
+  }
 });

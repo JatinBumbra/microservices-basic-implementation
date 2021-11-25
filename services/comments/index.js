@@ -16,49 +16,59 @@ app.get('/posts/:id/comments', (req, res) => {
 });
 
 app.post('/posts/:id/comments', async (req, res) => {
-  const commentId = randomBytes(4).toString('hex');
-  const { content } = req.body;
+  try {
+    const commentId = randomBytes(4).toString('hex');
+    const { content } = req.body;
 
-  const postId = req.params.id;
+    const postId = req.params.id;
 
-  const comments = commentsByPostId[postId] || [];
-  comments.push({ id: commentId, content, status: 'pending' });
+    const comments = commentsByPostId[postId] || [];
+    comments.push({ id: commentId, content, status: 'pending' });
 
-  commentsByPostId[postId] = comments;
+    commentsByPostId[postId] = comments;
 
-  await axios.post('http://localhost:4005/events', {
-    type: 'CommentCreated',
-    data: {
-      id: commentId,
-      postId,
-      content,
-      status: 'pending',
-    },
-  });
+    await axios.post('http://localhost:4005/events', {
+      type: 'CommentCreated',
+      data: {
+        id: commentId,
+        postId,
+        content,
+        status: 'pending',
+      },
+    });
 
-  res.status(201).json(comments);
+    res.status(201).json(comments);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error);
+  }
 });
 
 app.post('/events', async (req, res) => {
-  const { type, data } = req.body;
+  try {
+    const { type, data } = req.body;
 
-  if (type === 'CommentModerated') {
-    const { postId, id, status, content } = data;
-    const comment = commentsByPostId[postId].find((com) => com.id === id);
-    comment.status = status;
+    if (type === 'CommentModerated') {
+      const { postId, id, status, content } = data;
+      const comment = commentsByPostId[postId].find((com) => com.id === id);
+      comment.status = status;
 
-    await axios.post('http://localhost:4005/events', {
-      type: 'CommentUpdated',
-      data: {
-        id,
-        postId,
-        status,
-        content,
-      },
-    });
+      await axios.post('http://localhost:4005/events', {
+        type: 'CommentUpdated',
+        data: {
+          id,
+          postId,
+          status,
+          content,
+        },
+      });
+    }
+
+    res.json({});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error);
   }
-
-  res.json({});
 });
 
 app.listen(4001, () => {
