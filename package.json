@@ -1,0 +1,17 @@
+{
+  "workspaces": [
+    "./client",
+    "./services/*"
+  ],
+  "name": "basic-concepts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [],
+  "author": "JatinBumbra",
+  "license": "ISC",
+  "description": "",
+  "scripts": {
+    "client:start": "cd client && npm start",
+    "client:build": "cd client && npm run build"
+  }
+}
