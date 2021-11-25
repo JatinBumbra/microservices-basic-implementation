@@ -40,8 +40,6 @@ app.post('/posts/:id/comments', async (req, res) => {
 
 app.post('/events', async (req, res) => {
   const { type, data } = req.body;
-
-  console.log(type, data);
 });
 
 app.listen(4001, () => {

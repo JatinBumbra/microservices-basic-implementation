@@ -1,6 +1,5 @@
 {
   "workspaces": [
-    "./client",
     "./services/*",
     "./event-bus"
   ],
@@ -12,10 +11,9 @@
   "license": "ISC",
   "description": "",
   "scripts": {
-    "client:start": "cd client && npm start",
-    "client:build": "cd client && npm run build",
-    "service:posts:start": "cd services/posts && npm start",
-    "service:comments:start": "cd services/comments && npm start",
-    "event-bus:start": "cd event-bus && npm start"
+    "start:posts:service": "cd services/posts && npm start",
+    "start:comments:service": "cd services/comments && npm start",
+    "start:query:service": "cd services/query && npm start",
+    "start:event-bus": "cd event-bus && npm start"
   }
 }
